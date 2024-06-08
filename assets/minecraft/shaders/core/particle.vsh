@@ -21,7 +21,10 @@ out float vertexDistance;
 out vec2 texCoord0;
 out vec4 vertexColor;
 flat out particle_fv_data o_data;
-out particle_fv_lerp_data o_lerp_data;
+
+#if PARTICLE_DEBUG
+out vec2 dbg_vertex_uv;
+#endif
 
 const vec3[] VERTEX_OFFSETS = vec3[](
     vec3(-1f, -1f, 0f),
@@ -56,7 +59,7 @@ const vec2[] VERTEX_UVS = vec2[](
     return; \
 }
 
-#ifdef PARTICLE_DEBUG
+#if PARTICLE_DEBUG
 #define dbg_bail(c0, c1) { \
     o_data.dbg_error = true; \
     o_data.dbg_error_code = vec2(c0, c1); \
@@ -68,7 +71,6 @@ const vec2[] VERTEX_UVS = vec2[](
 
 void main() {
     o_data = PARTICLE_FV_DATA_EMPTY;
-    o_lerp_data = PARTICLE_FV_LERP_DATA_EMPTY;
 
     // Get the marker pixel.
     ivec2 marker_offset = MARKER_OFFSET[gl_VertexID % 4];
@@ -134,8 +136,8 @@ void main() {
         vec2 camera_rot = vec2(0f);
         vec3 camera_delta = vec3(0f);
 
-#ifdef PARTICLE_DEBUG
-        o_lerp_data.dbg_vertex_uv = VERTEX_UVS[gl_VertexID % 4];
+#if PARTICLE_DEBUG
+        dbg_vertex_uv = VERTEX_UVS[gl_VertexID % 4];
 #endif
 
         if (has_custom_x_size || has_custom_y_size || has_rotation_forcing_x || has_rotation_forcing_y) {

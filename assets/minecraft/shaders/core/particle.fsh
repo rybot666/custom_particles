@@ -15,14 +15,17 @@ in float vertexDistance;
 in vec2 texCoord0;
 in vec4 vertexColor;
 flat in particle_fv_data o_data;
-in particle_fv_lerp_data o_lerp_data;
+
+#if PARTICLE_DEBUG
+in vec2 dbg_vertex_uv;
+#endif
 
 out vec4 fragColor;
 
 void main() {
-    #ifdef PARTICLE_DEBUG
+#if PARTICLE_DEBUG
     if (o_data.dbg_error) {
-        vec2 vert_uv = o_lerp_data.dbg_vertex_uv;
+        vec2 vert_uv = dbg_vertex_uv;
 
         if ((vert_uv.x < 0.5f) != (vert_uv.y < 0.5f)) {
             fragColor = vec4(0f, 0f, 0f, 1f);
@@ -32,7 +35,7 @@ void main() {
 
         return;
     }
-    #endif
+#endif
 
     vec4 color = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
     if (color.a < 0.1) {
