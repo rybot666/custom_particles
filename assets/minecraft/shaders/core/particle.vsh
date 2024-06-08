@@ -27,10 +27,10 @@ out vec2 dbg_vertex_uv;
 #endif
 
 const vec3[] VERTEX_OFFSETS = vec3[](
-    vec3(-1f, -1f, 0f),
-    vec3(-1f, 1f, 0f),
-    vec3(1f, 1f, 0f),
-    vec3(1f, -1f, 0f)
+    vec3(-1.0, -1.0, 0.0),
+    vec3(-1.0, 1.0, 0.0),
+    vec3(1.0, 1.0, 0.0),
+    vec3(1.0, -1.0, 0.0)
 );
 
 const ivec2[] MARKER_OFFSET = ivec2[](
@@ -41,10 +41,10 @@ const ivec2[] MARKER_OFFSET = ivec2[](
 );
 
 const vec2[] VERTEX_UVS = vec2[](
-    vec2(1f, 1f),
-    vec2(1f, 0f),
-    vec2(0f, 0f),
-    vec2(0f, 1f)
+    vec2(1.0, 1.0),
+    vec2(1.0, 0.0),
+    vec2(0.0, 0.0),
+    vec2(0.0, 1.0)
 );
 
 #define write_out() { \
@@ -61,7 +61,7 @@ const vec2[] VERTEX_UVS = vec2[](
 
 #if PARTICLE_DEBUG
 #define dbg_bail(c0, c1) { \
-    o_data.dbg_error = true; \
+    o_data.dbg_error = 1; \
     o_data.dbg_error_code = vec2(c0, c1); \
     write_out(); \
 }
@@ -83,7 +83,7 @@ void main() {
         uvec2 marker = data_tex_read_uvec2(Sampler0, top_left_pos, 0);
 
         if (marker.x == PARTICLE_TEX_MAGIC) {
-            o_data.custom = true;
+            o_data.custom = 1;
             flags = marker.y;
         }
     }
@@ -94,7 +94,7 @@ void main() {
     ivec2 o_uv2 = UV2;
     bool ignore_lighting = false;
 
-    if (o_data.custom) {
+    if (o_data.custom == 1) {
         // Get particle metadata.
         float forced_rot_x = 0;
         bool has_rotation_forcing_x = false;
@@ -133,8 +133,8 @@ void main() {
         }
 
         // If rotation forcing is enabled, we need to get camera rotation.
-        vec2 camera_rot = vec2(0f);
-        vec3 camera_delta = vec3(0f);
+        vec2 camera_rot = vec2(0.0);
+        vec3 camera_delta = vec3(0.0);
 
 #if PARTICLE_DEBUG
         dbg_vertex_uv = VERTEX_UVS[gl_VertexID % 4];
@@ -153,7 +153,7 @@ void main() {
             // Reverse the calculation the game does for block marker particle rendering to get the position delta 
             // (in world space) between the center of our quad and the player camera.
             vec3 vertex_offset = VERTEX_OFFSETS[gl_VertexID % 4];
-            vec3 expected_pos = quat_rotate(vertex_offset, quat_xy(camera_rot.x, -camera_rot.y)) * 0.5f;
+            vec3 expected_pos = quat_rotate(vertex_offset, quat_xy(camera_rot.x, -camera_rot.y)) * 0.5;
             camera_delta = Position - expected_pos;
 
             float new_x_rot = has_rotation_forcing_x ? forced_rot_x : camera_rot.x;
@@ -163,7 +163,7 @@ void main() {
             vertex_offset.x *= custom_x_size;
             vertex_offset.y *= custom_y_size;
 
-            o_pos = quat_rotate(vertex_offset, quat_xy(-new_x_rot, new_y_rot)) * 0.5f + camera_delta;
+            o_pos = quat_rotate(vertex_offset, quat_xy(-new_x_rot, new_y_rot)) * 0.5 + camera_delta;
         }
 
         // Generate new UVs.

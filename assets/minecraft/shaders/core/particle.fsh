@@ -24,13 +24,13 @@ out vec4 fragColor;
 
 void main() {
 #if PARTICLE_DEBUG
-    if (o_data.dbg_error) {
+    if (o_data.dbg_error == 1) {
         vec2 vert_uv = dbg_vertex_uv;
 
-        if ((vert_uv.x < 0.5f) != (vert_uv.y < 0.5f)) {
-            fragColor = vec4(0f, 0f, 0f, 1f);
+        if ((vert_uv.x < 0.5) != (vert_uv.y < 0.5)) {
+            fragColor = vec4(0.0, 0.0, 0.0, 1.0);
         } else {
-            fragColor = vec4(1f, o_data.dbg_error_code, 1f);
+            fragColor = vec4(1.0, o_data.dbg_error_code, 1.0);
         }
 
         return;
