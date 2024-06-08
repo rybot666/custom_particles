@@ -10,10 +10,10 @@
 #define PARTICLE_FLAG_IGNORE_LIGHTING 0x0010u
 
 vec4 quat_xy(float x, float y) {
-	float sx = sin(x * 0.5f);
-	float cx = cos(x * 0.5f);
-	float sy = sin(y * 0.5f);
-	float cy = cos(y * 0.5f);
+	float sx = sin(x * 0.5);
+	float cx = cos(x * 0.5);
+	float sy = sin(y * 0.5);
+	float cy = cos(y * 0.5);
 
 	return vec4(cy * sx, sy * cx, -sy * sx, cy * cx);
 }
@@ -34,7 +34,7 @@ ivec4 data_tex_read_raw(sampler2D samp, ivec2 base, int index) {
 	ivec2 offset = ivec2(index % PARTICLE_TEX_WIDTH, index / PARTICLE_TEX_WIDTH);
 	ivec2 pixel_pos = base + offset;
 
-	return ivec4(texelFetch(samp, pixel_pos, 0) * 255f);
+	return ivec4(texelFetch(samp, pixel_pos, 0) * 255.0);
 }
 
 uint data_tex_read_uint(sampler2D samp, ivec2 base, int index) {

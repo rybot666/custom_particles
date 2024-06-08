@@ -4,7 +4,7 @@
 #if PARTICLE_DEBUG
 #define PARTICLE_FV_DATA_EMPTY particle_fv_data( \
 	false, \
-	vec2(0f, 0f), \
+	vec2(0.0), \
 	false \
 )
 #else
