@@ -71,6 +71,14 @@ const vec2[] VERTEX_UVS = vec2[](
 
 void main() {
     o_data = PARTICLE_FV_DATA_EMPTY;
+    vec3 o_pos = Position;
+    vec2 o_uv0 = UV0;
+    ivec2 o_uv2 = UV2;
+    bool ignore_lighting = false;
+
+    #if PARTICLE_DEBUG
+        dbg_vertex_uv = VERTEX_UVS[gl_VertexID % 4];
+    #endif
 
     // Get the marker pixel.
     ivec2 marker_offset = MARKER_OFFSET[gl_VertexID % 4];
@@ -87,12 +95,6 @@ void main() {
             flags = marker.y;
         }
     }
-
-    // If we didn't get a custom particle, defer to vanilla handling.
-    vec3 o_pos = Position;
-    vec2 o_uv0 = UV0;
-    ivec2 o_uv2 = UV2;
-    bool ignore_lighting = false;
 
     if (o_data.custom == 1) {
         // Get particle metadata.
@@ -136,10 +138,6 @@ void main() {
         vec2 camera_rot = vec2(0.0);
         vec3 camera_delta = vec3(0.0);
 
-#if PARTICLE_DEBUG
-        dbg_vertex_uv = VERTEX_UVS[gl_VertexID % 4];
-#endif
-
         if (has_custom_x_size || has_custom_y_size || has_rotation_forcing_x || has_rotation_forcing_y) {
             // Extract player camera rotation from ModelViewMat.
             float sin_x = ModelViewMat[1][2];
@@ -163,7 +161,7 @@ void main() {
             vertex_offset.x *= custom_x_size;
             vertex_offset.y *= custom_y_size;
 
-            o_pos = quat_rotate(vertex_offset, quat_xy(-new_x_rot, new_y_rot)) * 0.5 + camera_delta;
+            o_pos = quat_rotate(vertex_offset, quat_xy(new_x_rot, -new_y_rot)) * 0.5 + camera_delta;
         }
 
         // Generate new UVs.

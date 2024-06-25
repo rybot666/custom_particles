@@ -49,7 +49,7 @@ def generate_output(
     if x_size is not None and x_size != 1:
         flags |= FLAG_HAS_X_SIZE
 
-    if y_size is not None and x_size != 1:
+    if y_size is not None and y_size != 1:
         flags |= FLAG_HAS_Y_SIZE
 
     if ignore_lighting:
@@ -61,7 +61,7 @@ def generate_output(
     img_out.putpixel((1, 0), unpack_rgba(struct.pack('>hh', 0, 1)))
 
     # Write out texture size.
-    img_out.putpixel((2, 0), unpack_rgba(struct.pack('>hh', img_in.size[0], img_in.size[1])))
+    img_out.putpixel((2, 0), unpack_rgba(struct.pack('>HH', img_in.size[0], img_in.size[1])))
 
     # Write out forced rotations.
     img_out.putpixel((3, 0), unpack_rgba(struct.pack('>f', 
@@ -71,7 +71,7 @@ def generate_output(
 
     # Write out X/Y size.
     img_out.putpixel((5, 0), unpack_rgba(struct.pack('>f', x_size or 1)))
-    img_out.putpixel((6, 0), unpack_rgba(struct.pack('>f', x_size or 1)))
+    img_out.putpixel((6, 0), unpack_rgba(struct.pack('>f', y_size or 1)))
 
     # Copy input image.
     img_out.paste(img_in, box=(0, 1))
